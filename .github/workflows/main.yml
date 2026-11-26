@@ -23,21 +23,22 @@ jobs:
       - name: Accept Android SDK Licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-      - name: Find Project & Build APK
+      - name: Extract ZIP & Build APK
         run: |
-          echo "=== Repository Contents ==="
-          find . -maxdepth 3 -not -path '*/.*'
-          
+          if [ -f "English-Khmer-Video-Maker-2027.zip" ]; then
+            unzip -q -o English-Khmer-Video-Maker-2027.zip -d extracted_project
+          fi
+
           GRADLE_FILE=$(find . -name "settings.gradle" -o -name "build.gradle" | head -n 1)
           if [ -z "$GRADLE_FILE" ]; then
-            echo "ERROR: No Gradle project files found in this repository! Please upload your app/, build.gradle, and settings.gradle files to GitHub."
+            echo "ERROR: No Gradle project files found even after checking for ZIP files."
             exit 1
           fi
-          
+
           PROJECT_DIR=$(dirname "$GRADLE_FILE")
-          echo "Found Gradle project in: $PROJECT_DIR"
+          echo "Building project in: $PROJECT_DIR"
           cd "$PROJECT_DIR"
-          
+
           gradle wrapper --gradle-version 8.7
           chmod +x gradlew
           ./gradlew assembleDebug
