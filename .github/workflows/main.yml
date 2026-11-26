@@ -25,8 +25,9 @@ jobs:
 
       - name: Extract ZIP & Build APK
         run: |
-          if [ -f "English-Khmer-Video-Maker-2027.zip" ]; then
-            unzip -q -o English-Khmer-Video-Maker-2027.zip -d extracted_project
+          ZIP_FILE=$(find . -maxdepth 1 -name "*.zip" | head -n 1)
+          if [ -n "$ZIP_FILE" ]; then
+            unzip -q -o "$ZIP_FILE" -d extracted_project
           fi
 
           GRADLE_FILE=$(find . -name "settings.gradle" -o -name "build.gradle" | head -n 1)
@@ -41,7 +42,7 @@ jobs:
 
           gradle wrapper --gradle-version 8.9
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --max-workers=2
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
