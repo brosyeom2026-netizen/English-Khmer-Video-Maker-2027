@@ -31,7 +31,7 @@ jobs:
 
           GRADLE_FILE=$(find . -name "settings.gradle" -o -name "build.gradle" | head -n 1)
           if [ -z "$GRADLE_FILE" ]; then
-            echo "ERROR: No Gradle project files found even after checking for ZIP files."
+            echo "ERROR: No Gradle project files found."
             exit 1
           fi
 
@@ -39,7 +39,7 @@ jobs:
           echo "Building project in: $PROJECT_DIR"
           cd "$PROJECT_DIR"
 
-          gradle wrapper --gradle-version 8.7
+          gradle wrapper --gradle-version 8.9
           chmod +x gradlew
           ./gradlew assembleDebug
 
